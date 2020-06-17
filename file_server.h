@@ -1,6 +1,11 @@
 #pragma once
 
+#include <iostream>
 #include <string>
+#include <thread>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <unistd.h>
 
 class FileServer {
 public:
@@ -11,6 +16,8 @@ public:
 
     void run();
 
+    void handle(int socket);
+
 private:
 
     void startWritingFile(std::string name);
@@ -20,4 +27,9 @@ private:
     void finishWritingFile(std::string name);
 
     const unsigned short port = 5678;
+
+    int serverDescriptor;
+    sockaddr_in address;
+
+    bool listening = true;
 };
