@@ -3,6 +3,13 @@
 #include <iostream>
 #include <string>
 #include <thread>
+#include <iostream>
+#include <fstream>
+#include <cstdint>
+#include <filesystem>
+#include <mutex>
+#include <map>
+
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h>
@@ -32,4 +39,6 @@ private:
     sockaddr_in address;
 
     bool listening = true;
+    std::map<std::string, std::fstream> files;
+    std::mutex filesLock;
 };
