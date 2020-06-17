@@ -17,7 +17,7 @@ public:
 
     void run();
 
-//private:
+private:
 
     void startWritingFile(std::string name);
 
