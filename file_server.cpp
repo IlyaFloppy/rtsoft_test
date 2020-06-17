@@ -6,11 +6,6 @@ void FileServer::start() {
         throw std::runtime_error("failed to create server socket");
     }
 
-    int opt = 1;
-    if (setsockopt(serverDescriptor, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt))) {
-        throw std::runtime_error("failed to set socket opt");
-    }
-
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = INADDR_ANY;
     address.sin_port = htons(port);
@@ -24,6 +19,7 @@ void FileServer::start() {
     }
 
     std::thread listener([this]() { this->run(); });
+    listener.detach();
 }
 
 void FileServer::stop() {
@@ -40,6 +36,7 @@ void FileServer::run() {
         }
 
         std::thread handler([this, socket]() { this->handle(socket); });
+        handler.detach();
     }
 }
 
