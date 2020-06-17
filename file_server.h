@@ -1,12 +1,18 @@
 #pragma once
 
+#include <iostream>
 #include <string>
+#include <thread>
 #include <iostream>
 #include <fstream>
 #include <cstdint>
 #include <filesystem>
 #include <mutex>
 #include <map>
+
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <unistd.h>
 
 class FileServer {
 public:
@@ -16,6 +22,8 @@ public:
     void stop();
 
     void run();
+
+    void handle(int socket);
 
 private:
 
@@ -27,6 +35,10 @@ private:
 
     const unsigned short port = 5678;
 
+    int serverDescriptor;
+    sockaddr_in address;
+
+    bool listening = true;
     std::map<std::string, std::fstream> files;
     std::mutex filesLock;
 };
