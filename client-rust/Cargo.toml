@@ -1,5 +1,5 @@
 [package]
-name = "client"
+name = "client-rust"
 version = "0.1.0"
 authors = ["Ilya Popovnin <itdbnice@gmail.com>"]
 edition = "2018"
