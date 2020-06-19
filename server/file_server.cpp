@@ -64,7 +64,7 @@ void FileServer::handle(int socket) {
     std::string filename;
     std::vector<uint8_t> buffer;
     while (dataLength != 0) {
-        const int receiveBufferSize = 1 << 12;
+        const int receiveBufferSize = 1 << 16;
         uint8_t receiveBuffer[receiveBufferSize] = {0};
         int readBytes = read(socket, receiveBuffer, receiveBufferSize);
         for (int i = 0; i < readBytes; ++i) {
