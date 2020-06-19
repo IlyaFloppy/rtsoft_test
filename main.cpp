@@ -7,5 +7,7 @@ int main() {
     std::cout << "Press enter to stop..." << std::endl;
     std::cin.get();
 
+    server.stop();
+
     return 0;
 }

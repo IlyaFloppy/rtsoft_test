@@ -13,6 +13,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h>
+#include <poll.h>
 
 class FileServer {
 public:
@@ -37,6 +38,9 @@ private:
 
     int serverDescriptor;
     sockaddr_in address;
+
+    std::thread listener;
+    std::map<int, std::thread> handlers;
 
     bool listening = true;
     std::map<std::string, std::fstream> files;

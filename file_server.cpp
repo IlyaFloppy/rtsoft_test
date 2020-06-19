@@ -18,25 +18,44 @@ void FileServer::start() {
         throw std::runtime_error("failed to start listening");
     }
 
-    std::thread listener([this]() { this->run(); });
-    listener.detach();
+    listener = std::thread([this]() { this->run(); });
 }
 
 void FileServer::stop() {
-
+    listening = false;
+    listener.join();
+    for (auto &h : handlers) {
+        h.second.join();
+    }
 }
 
 void FileServer::run() {
+    pollfd fds[1];
+    fds[0].fd = serverDescriptor;
+    fds[0].events = POLLIN;
+
     while (listening) {
-        int addressLength = sizeof(address);
-        int socket = accept(serverDescriptor, (struct sockaddr *) &address, (socklen_t *) &addressLength);
+        const int pollTimeoutMillis = 100;
+        int pr = poll(fds, 1, pollTimeoutMillis);
 
-        if (socket < 0) {
-            std::cerr << "failed to accept socket" << std::endl;
+        if (pr == -1) {
+            std::cerr << "error occured while polling" << std::endl;
+        } else if (pr == 0) {
+            // nothing happened
+        } else {
+            if (fds[0].revents & POLLIN) {
+                fds[0].revents = 0;
+
+                int addressLength = sizeof(address);
+                int socket = accept(serverDescriptor, (struct sockaddr *) &address, (socklen_t *) &addressLength);
+
+                if (socket < 0) {
+                    std::cerr << "failed to accept socket" << std::endl;
+                }
+
+                handlers[socket] = std::thread([this, socket]() { this->handle(socket); });
+            }
         }
-
-        std::thread handler([this, socket]() { this->handle(socket); });
-        handler.detach();
     }
 }
 
