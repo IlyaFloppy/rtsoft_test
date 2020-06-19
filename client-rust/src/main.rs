@@ -43,7 +43,7 @@ fn main() -> std::io::Result<()> {
     let mut buffer: Vec<u8> = Vec::new();
     let mut first_block = true;
     for byte in data {
-        if buffer.len() < 3 {
+        if buffer.len() < 8192 {
             buffer.push(byte);
         } else {
             send_data_block(&mut stream, remote_filename, &buffer, first_block)?;
