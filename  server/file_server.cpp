@@ -66,17 +66,18 @@ void FileServer::handle(int socket) {
         const int receiveBufferSize = 1 << 12;
         uint8_t receiveBuffer[receiveBufferSize] = {0};
         int readBytes = read(socket, receiveBuffer, receiveBufferSize);
-        dataLength =
-                (receiveBuffer[0] << 24) +
-                (receiveBuffer[1] << 16) +
-                (receiveBuffer[2] << 8) +
-                (receiveBuffer[3]);
 
         bool isFirstBlock = dataLength < 0;
         if (isFirstBlock) {
             filename = std::string((char *) (receiveBuffer + 4));
         }
         startWritingFile(filename);
+
+        dataLength =
+                (receiveBuffer[0] << 24) +
+                (receiveBuffer[1] << 16) +
+                (receiveBuffer[2] << 8) +
+                (receiveBuffer[3]);
 
         int offset = 4;
         if (isFirstBlock) {
