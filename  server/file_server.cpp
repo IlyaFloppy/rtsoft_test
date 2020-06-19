@@ -70,8 +70,8 @@ void FileServer::handle(int socket) {
         bool isFirstBlock = dataLength < 0;
         if (isFirstBlock) {
             filename = std::string((char *) (receiveBuffer + 4));
+            startWritingFile(filename);
         }
-        startWritingFile(filename);
 
         dataLength =
                 (receiveBuffer[0] << 24) +
