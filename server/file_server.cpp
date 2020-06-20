@@ -103,6 +103,8 @@ void FileServer::startWritingFile(std::string name) {
     if (files.find(name) != files.end()) {
         throw std::runtime_error("file is open");
     } else {
+        std::filesystem::path path(name);
+        std::filesystem::create_directories(path.parent_path());
         files[name] = std::fstream(name, std::ios::out | std::ios::binary);
     }
     filesLock.unlock();
