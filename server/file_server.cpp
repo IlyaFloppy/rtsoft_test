@@ -99,13 +99,13 @@ void FileServer::handle(int socket) {
 }
 
 void FileServer::startWritingFile(std::string name) {
+    filesLock.lock();
     if (files.find(name) != files.end()) {
         throw std::runtime_error("file is open");
     } else {
-        filesLock.lock();
         files[name] = std::fstream(name, std::ios::out | std::ios::binary);
-        filesLock.unlock();
     }
+    filesLock.unlock();
 }
 
 void FileServer::writeBlock(std::string name, uint8_t *block, int size) {
