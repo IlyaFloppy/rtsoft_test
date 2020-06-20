@@ -19,6 +19,8 @@ if len(argv) != 4:
           "address\n"
           "local name\n"
           "remote name\n")
+    exit(0)
+
 script, address, local_name, remote_name = argv
 
 sock = socket.socket()
